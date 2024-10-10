@@ -11,7 +11,7 @@ python case.py
 
 For visualization, because of too much data files if I generate them in different files, I just save a temp file for usage. So I didn't put it here. 
 
-For firstly running, you need to set the parameter `if_regen` with `True` in function `uni_distribution_2range`.
+For running, you need always set the parameter `if_regen` with `True` in function `uni_distribution_2range`.
 
 ```shell
 python visualization.py
