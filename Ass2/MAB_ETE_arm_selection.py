@@ -17,14 +17,15 @@ def cal_uni_expectation(upper, lower):
     """
     return (upper + lower) / 2
 
-def arm_selection_ete_policy(num_of_arms, exploration_phase, current_best_arm, pull_counts, rewards):
+def arm_selection_ete_policy(round, num_of_arms, exploration_phase, current_best_arm, pull_counts, rewards):
     """
     Target: Conduct the Explore-Then-Exploit selection algorithm to simulate the multi-arm bandit
     Return: Return selected arm with the current algorithm
     """
     if exploration_phase:
         # In the exploration phase, try each arm once
-        select_arm = np.random.randint(num_of_arms, size=1)[0]
+        # select_arm = np.random.randint(num_of_arms, size=1)[0]
+        select_arm = round % (num_of_arms)
         pull_counts[select_arm] += 1
     else:
         # In the exploitation phase, always choose the best arm
@@ -38,7 +39,8 @@ if __name__ == "__main__":
     # parameters
     num_of_arms = 10                            # number of arms
     winning_parameters = np.array([tuple([0,2]), tuple([1,3]), tuple([2,4]), tuple([3,9]), tuple([4,6]), tuple([8,10]), tuple([3,5]), tuple([4,10]), tuple([5,7]), tuple([6,8])])
-    exploration_phase_length = num_of_arms      # number of rounds in the exploration phase
+    m = 1
+    exploration_phase_length = m * num_of_arms      # number of rounds in the exploration phase
     T = 10000					                # number of rounds to simulate
     total_iteration = 200                       # number of iterations to the MAB simulation
 
@@ -57,7 +59,7 @@ if __name__ == "__main__":
         exploration_phase = True
         for round in range(T):
             # select the best arm with a specific algorithm
-            select_arm = arm_selection_ete_policy(num_of_arms, exploration_phase, current_best_arm, pull_counts, rewards)
+            select_arm = arm_selection_ete_policy(round, num_of_arms, exploration_phase, current_best_arm, pull_counts, rewards)
             # generate reward for the selected arm
             reward = cal_uni_expectation(winning_parameters[select_arm][1], winning_parameters[select_arm][0])
             reward_round_iteration[round] += reward
