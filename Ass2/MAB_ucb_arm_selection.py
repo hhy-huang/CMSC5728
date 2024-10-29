@@ -3,11 +3,9 @@ CMSC5728 Programming Assignment #2
 Author: HUANG, Hao Yu
 Date:   10/28/2024
 """
-import random
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-
 
 def cal_uni_expectation(upper, lower):
     """
@@ -16,17 +14,16 @@ def cal_uni_expectation(upper, lower):
     """
     return (upper + lower) / 2
 
-def arm_selection_ucb_policy(num_of_arms, pull_counts, rewards, round_num):
+def arm_selection_ucb_policy(num_of_arms, pull_counts, rewards, t):
     """
     Target: Conduct the UCB selection algorithm to simulate the multi-arm bandit
     Return: Return selected arm with the current algorithm
     """
-    # Calculate the average reward and the number of pulls for each arm
+    # Calculate the average reward for each arm
     averages = rewards / pull_counts
-    counts = pull_counts
     
     # Calculate the UCB index for each arm
-    ucb_values = averages + math.sqrt(2 * math.log(round_num) / counts)
+    ucb_values = np.array([averages + math.sqrt(2 * math.log(t) / x) for x in pull_counts])
     
     # Select the arm with the highest UCB index
     select_arm = np.argmax(ucb_values)
@@ -38,7 +35,7 @@ if __name__ == "__main__":
     # parameters
     num_of_arms = 10                    # number of arms
     winning_parameters = np.array([tuple([0,2]), tuple([1,3]), tuple([2,4]), tuple([3,9]), tuple([4,6]), tuple([8,10]), tuple([3,5]), tuple([4,10]), tuple([5,7]), tuple([6,8])])
-    T = 10000					        # number of rounds to simulate
+    T = 100                           # number of rounds to simulate
     total_iteration = 200               # number of iterations to the MAB simulation
 
     # Initialize arrays to store the number of pulls and rewards for each arm
@@ -51,8 +48,14 @@ if __name__ == "__main__":
     # Go through T rounds, each round we need to select an arm
     for iteration_count in range(total_iteration):
         for round in range(T):
-            # select the best arm with a specific algorithm
-            select_arm = arm_selection_ucb_policy(num_of_arms, pull_counts, rewards, round + T * iteration_count)[0]
+            t = round + T * iteration_count + 1  # current time slot
+            if round < num_of_arms:
+                # First N rounds, pull each arm once
+                select_arm = round
+            else:
+                # After the first N rounds, use UCB policy to select the arm
+                select_arm = arm_selection_ucb_policy(num_of_arms, pull_counts, rewards, t)
+            
             # generate reward for the selected arm
             reward = cal_uni_expectation(winning_parameters[select_arm][1], winning_parameters[select_arm][0])
             rewards[select_arm] += reward
