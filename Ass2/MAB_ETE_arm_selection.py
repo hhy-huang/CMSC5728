@@ -82,10 +82,12 @@ if __name__ == "__main__":
     cumulative_reward = 0.0
     X = np.zeros(T, dtype=int)
     Y = np.zeros(T, dtype=float)
+    Y2 = np.zeros(T, dtype=float)
     for round in range(T):
         X[round] = round
         cumulative_optimal_reward += cal_uni_expectation(winning_parameters[5][1], winning_parameters[5][0])  # Assuming the optimal arm is the 6th arm
         cumulative_reward += average_reward_in_each_round[round]
+        Y2[round] = cumulative_reward
         Y[round] = (cumulative_optimal_reward - cumulative_reward)
 
     print(f'After {T} rounds:\n',
@@ -102,11 +104,11 @@ if __name__ == "__main__":
     axs[0].legend(loc='upper left')
     axs[0].set_xlim(0,T)
     axs[0].set_ylim(0,1.1*(cumulative_optimal_reward - cumulative_reward))
-    axs[1].plot(X, average_reward_in_each_round, color = 'black', label='average reward')
-    axs[1].set(xlabel='round number', ylabel='Average Reward per round')
+    axs[1].plot(X, Y2, color = 'black', label='cumulative average reward')
+    axs[1].set(xlabel='round number', ylabel='Cumulative Average Reward per round')
     axs[1].grid(True)
     axs[1].legend(loc='upper left')
     axs[1].set_xlim(0,T)
-    axs[1].set_ylim(0,10.0)
-    plt.savefig("ETE.png")
+    axs[1].set_ylim(0,max(Y2))
+    plt.savefig(f"ETE_m{m}.png")
     plt.show()
