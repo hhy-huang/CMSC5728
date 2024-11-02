@@ -74,7 +74,7 @@ def arm_selection_ete_policy(round, num_of_arms, exploration_phase, current_best
 
 
 if __name__ == "__main__":
-    T = 10000					        # number of rounds to simulate
+    T = 2000					        # number of rounds to simulate
     num_of_arms = 10
     winning_parameters = np.array([tuple([0,2]), tuple([1,9]), tuple([1,3]), tuple([3,5]), tuple([4,6]), tuple([2,10]), tuple([1,5]), tuple([4,10]), tuple([5,7]), tuple([0,10])])
     total_iteration = 200               # number of iterations to the MAB simulation
