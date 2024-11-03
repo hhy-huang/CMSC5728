@@ -18,7 +18,9 @@ def cal_uni_expectation(upper, lower):
 
 def epsilon_fuc(t):
     # Define epsilon as a function of time t
-    return 1.0 / (1.0 + t)
+    # return 1.0 / (1.0 + t)
+    t = t + 1
+    return (10 * math.log(t) / t)**(1/3)
 
 def arm_selection_random_selction_policy(num_of_arms):
     """
@@ -76,7 +78,9 @@ def arm_selection_ete_policy(round, num_of_arms, exploration_phase, current_best
 if __name__ == "__main__":
     T = 2000					        # number of rounds to simulate
     num_of_arms = 10
-    winning_parameters = np.array([tuple([0,2]), tuple([1,9]), tuple([1,3]), tuple([3,5]), tuple([4,6]), tuple([2,10]), tuple([1,5]), tuple([4,10]), tuple([5,7]), tuple([0,10])])
+    winning_parameters = np.array([tuple([0,2]), tuple([1,9]), tuple([1,3]), tuple([3,5]), \
+                                   tuple([4,6]), tuple([2,10]), tuple([1,5]), tuple([4,10]), \
+                                    tuple([5,7]), tuple([0,10])])
     total_iteration = 200               # number of iterations to the MAB simulation
     optimal_arm = 7
     reward_avg = np.sum(np.array([cal_uni_expectation(x[1], x[0]) for x in winning_parameters])) / num_of_arms
